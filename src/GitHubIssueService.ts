@@ -95,6 +95,9 @@ export class GitHubIssueService {
       await this.context.globalState.update('githubIssues', cachedData);
       this.outputChannel.appendLine(`Fetched and cached ${issues.length} GitHub issues and ${pullRequests.length} pull requests`);
 
+      // Emit the updated data
+      this._onDataUpdated.fire({ issues, pullRequests });
+
       return { issues, pullRequests };
     } catch (error) {
       this.handleError('Error fetching GitHub issues and pull requests', error);
