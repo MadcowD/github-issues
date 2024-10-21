@@ -13,13 +13,15 @@ export class GitHubIssueService {
   private octokit: Octokit | null = null;
   private outputChannel: vscode.OutputChannel;
   private refreshInterval: NodeJS.Timeout | null = null;
+  private workspaceState: vscode.Memento;
 
   constructor(
     private workspaceRoot: string | undefined,
-    private context: vscode.ExtensionContext,
+    context: vscode.ExtensionContext,
     outputChannel: vscode.OutputChannel
   ) {
     this.outputChannel = outputChannel;
+    this.workspaceState = context.workspaceState;
     this.startBackgroundRefresh();
   }
 
@@ -50,7 +52,8 @@ export class GitHubIssueService {
   }
 
   async getCachedOrFetchIssues(): Promise<{ issues: any[], pullRequests: any[] }> {
-    const cachedData = this.context.globalState.get<CachedIssues>('githubIssues');
+    const cacheKey = await this.getCacheKey();
+    const cachedData = this.workspaceState.get<CachedIssues>(cacheKey);
     
     if (cachedData) {
       const now = Date.now();
@@ -92,8 +95,9 @@ export class GitHubIssueService {
         pullRequests
       };
 
-      await this.context.globalState.update('githubIssues', cachedData);
-      this.outputChannel.appendLine(`Fetched and cached ${issues.length} GitHub issues and ${pullRequests.length} pull requests`);
+      const cacheKey = await this.getCacheKey();
+      await this.workspaceState.update(cacheKey, cachedData);
+      this.outputChannel.appendLine(`Fetched and cached ${issues.length} GitHub issues and ${pullRequests.length} pull requests for ${owner}/${repo}`);
 
       // Emit the updated data
       this._onDataUpdated.fire({ issues, pullRequests });
@@ -140,8 +144,9 @@ export class GitHubIssueService {
   }
 
   async clearCache(): Promise<void> {
-    await this.context.globalState.update('githubIssues', undefined);
-    this.outputChannel.appendLine('Cleared GitHub issues cache');
+    const cacheKey = await this.getCacheKey();
+    await this.workspaceState.update(cacheKey, undefined);
+    this.outputChannel.appendLine('Cleared GitHub issues cache for the current workspace');
   }
 
   private startBackgroundRefresh(): void {
@@ -160,8 +165,9 @@ export class GitHubIssueService {
     vscode.window.showErrorMessage(`${message}. Check output for details.`);
   }
 
-  private getFallbackItems(): { issues: any[], pullRequests: any[] } {
-    const cachedData = this.context.globalState.get<CachedIssues>('githubIssues');
+  private async getFallbackItems(): Promise<{ issues: any[], pullRequests: any[] }> {
+    const cacheKey = await this.getCacheKey();
+    const cachedData = this.workspaceState.get<CachedIssues>(cacheKey);
     if (cachedData) {
       this.outputChannel.appendLine('Using fallback cached issues and pull requests due to fetch error');
       return { issues: cachedData.issues, pullRequests: cachedData.pullRequests };
@@ -214,7 +220,8 @@ export class GitHubIssueService {
   }
 
   async getCachedIssues(): Promise<{ issues: any[], pullRequests: any[] }> {
-    const cachedData = this.context.globalState.get<CachedIssues>('githubIssues');
+    const cacheKey = await this.getCacheKey();
+    const cachedData = this.workspaceState.get<CachedIssues>(cacheKey);
     if (cachedData) {
       this.outputChannel.appendLine('Using cached GitHub issues and pull requests');
       return { issues: cachedData.issues, pullRequests: cachedData.pullRequests };
@@ -246,4 +253,9 @@ export class GitHubIssueService {
   // Add this event emitter to the class
   private _onDataUpdated: vscode.EventEmitter<{ issues: any[], pullRequests: any[] }> = new vscode.EventEmitter<{ issues: any[], pullRequests: any[] }>();
   readonly onDataUpdated: vscode.Event<{ issues: any[], pullRequests: any[] }> = this._onDataUpdated.event;
+
+  private async getCacheKey(): Promise<string> {
+    const { owner, repo } = await this.getGitHubRepoInfo();
+    return `githubIssues_${owner}_${repo}`;
+  }
 }
