@@ -1,71 +1,88 @@
-# github-issues README
+# GitHub Issues Explorer
 
-This is the README for your extension "github-issues". After writing up a brief description, we recommend including the following sections.
+GitHub Issues Explorer is a robust Visual Studio Code extension designed to streamline your workflow by integrating GitHub issues and pull requests directly into your development environment. This powerful tool allows developers to manage and interact with their repository's issues and PRs without leaving their code editor, significantly enhancing productivity.
 
-## Features
+## Key Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+1. **Comprehensive Issue and PR Explorer**
+   - Browse all issues and pull requests in a convenient tree view within the VSCode sidebar
+   - Efficiently categorize and navigate through:
+     - Open and Closed Issues
+     - Open and Closed Pull Requests
 
-For example if there is an image subfolder under your extension project workspace:
+2. **Detailed Issue View**
+   - Access comprehensive issue details in a dedicated panel, including:
+     - Title and issue number
+     - Creator and creation date
+     - Full description with rendered Markdown support
 
-\!\[feature X\]\(images/feature-x.png\)
+3. **Advanced Sub-issue Management**
+   - Leverage checkbox support for sub-issues within issue descriptions
+   - Manage sub-issues directly from the tree view
+   - Track progress with automatic calculations for issues containing sub-tasks
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+4. **Real-time Progress Visualization**
+   - Monitor task completion with visual progress bars for issues containing sub-tasks
+   - Instantly view completion percentages for complex issues
 
-## Requirements
+5. **Powerful Search Capabilities**
+   - Perform full-text searches across all issues and pull requests
+   - Filter results based on title, body content, and sub-issues
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+6. **Efficient Data Management**
+   - Manually refresh issue and PR lists as needed
+   - Benefit from automatic background refreshes to maintain up-to-date information
+   - Utilize an intelligent caching system to minimize API calls and optimize performance
 
-## Extension Settings
+7. **Secure Authentication**
+   - Authenticate securely with GitHub using VSCode's built-in authentication provider
+   - Enjoy seamless token management and automatic renewal
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+8. **Automatic Repository Detection**
+   - Experience hassle-free setup with automatic detection of the GitHub repository associated with your current workspace
 
-For example:
+## Getting Started
 
-This extension contributes the following settings:
+1. Install the GitHub Issues Explorer extension from the VSCode marketplace
+2. Open a workspace linked to a GitHub repository
+3. Complete the GitHub authentication process when prompted
+4. Access the GitHub Issues Explorer view in your sidebar
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+## Available Commands
 
-## Known Issues
+- `GitHub Issues: Refresh Issues`: Manually update the issue and PR list
+- `GitHub Issues: Search Issues`: Initiate a search to filter issues and PRs
+- `GitHub Issues: Clear Search`: Remove the current search filter
+- `GitHub Issues: Edit Issue`: Modify the title of the selected issue
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+## System Requirements
 
-## Release Notes
+- Visual Studio Code v1.60.0 or later
+- Active GitHub account
+- Workspace connected to a GitHub repository
 
-Users appreciate release notes as you update your extension.
+## Configuration
+
+This extension provides the following customizable setting:
+
+* `github-issues.refreshInterval`: Define the automatic refresh interval in minutes
+
+## Reporting Issues
+
+Encountered a problem? Please report it on our [GitHub repository](https://github.com/yourusername/vscode-github-issues/issues).
+
+## Release Information
 
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Initial release of GitHub Issues Explorer, introducing core functionality.
 
 ---
 
-## Following extension guidelines
+## Contributing
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+We value community contributions! Please refer to our [contributing guidelines](CONTRIBUTING.md) for more details on how to get involved.
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+## License
 
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+This project is distributed under the MIT License. For full details, please see the [LICENSE](LICENSE) file.
